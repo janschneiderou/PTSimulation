@@ -1,0 +1,23 @@
+﻿<Window x:Class="PTSimulation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PTSimulation"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <StackPanel>
+            <RadioButton Name="rgood" GroupName="Feedback" Content="Good" IsChecked="True"/>
+            <RadioButton Name="rPosture" GroupName="Feedback" Content="Reset Posture" />
+            <RadioButton Name="rGesture" GroupName="Feedback" Content="Move Hands" />
+            <RadioButton Name="rSpeakLouder" GroupName="Feedback" Content="Speak Louder" />
+            <RadioButton Name="rSpeakSofter" GroupName="Feedback" Content="Speak Softer"/>
+            <RadioButton Name="rStopSpeaking" GroupName="Feedback" Content="Stop Speaking"/>
+            <RadioButton Name="rStartSpeaking" GroupName="Feedback" Content="Start Speaking"/>
+            <RadioButton Name="rStayStill" GroupName="Feedback" Content="Stand Still"/>
+            <RadioButton Name="rStopHmm" GroupName="Feedback" Content="Stop Hmmmm"/>
+            <RadioButton Name="rSmile" GroupName="Feedback" Content="Smile"/>
+        </StackPanel>
+    </Grid>
+</Window>
