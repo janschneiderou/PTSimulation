@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +26,7 @@ namespace PTSimulation
         private Thread storingAndSending;
         bool isRunning = true;
         public ConnectorHub.ConnectorHub myConectorHub;
+        public ConnectorHub.FeedbackHub myFeedbackHub;
 
         public MainWindow()
         {
@@ -33,12 +36,16 @@ namespace PTSimulation
             {
                 myConectorHub = new ConnectorHub.ConnectorHub();
 
-                myConectorHub.init();
-                myConectorHub.sendReady();
+                myConectorHub.Init();
                 setValuesNames();
-                myConectorHub.startRecordingEvent += MyConectorHub_startRecordingEvent;
-                myConectorHub.stopRecordingEvent += MyConectorHub_stopRecordingEvent;
-
+                myConectorHub.SendReady();
+                
+                myConectorHub.StartRecordingEvent += MyConectorHub_startRecordingEvent;
+                myConectorHub.StopRecordingEvent += MyConectorHub_stopRecordingEvent;
+                myFeedbackHub = new ConnectorHub.FeedbackHub();
+                myFeedbackHub.Init();
+                myFeedbackHub.FeedbackReceivedEvent += MyFeedbackHub_FeedbackReceivedEvent;
+               
 
             }
             catch (Exception e)
@@ -50,6 +57,22 @@ namespace PTSimulation
             storingAndSending.Start();
 
 
+        }
+
+        private void MyFeedbackHub_FeedbackReceivedEvent(object sender, string feedback)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    feedbackLabel.Content = feedback;
+                }
+                catch
+                {
+
+                }
+
+            });
         }
 
         private void MyConectorHub_stopRecordingEvent(object sender)
@@ -67,7 +90,7 @@ namespace PTSimulation
             List<string> names = new List<string>();
             string temp = "feedback";
             names.Add(temp);
-            myConectorHub.setValuesName(names);
+            myConectorHub.SetValuesName(names);
         }
 
         private void storingAndSendingStart()
@@ -127,12 +150,28 @@ namespace PTSimulation
                         feedbackString = "Good!!!";
                     }
                 });
+
+                try
+                {
+                    Socket udpSendingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    IPAddress serverAddr = IPAddress.Parse("192.168.178.23");
+                    IPEndPoint UDPendPoint = new IPEndPoint(serverAddr, 16002);
+                    byte[] send_buffer = Encoding.ASCII.GetBytes(feedbackString);
+                    udpSendingSocket.SendTo(send_buffer, UDPendPoint);
+                }
+                catch
+                {
+
+                }
+
                 try
                 {
                     values.Add(feedbackString);
-                    myConectorHub.storeFrame(values);
+                    myConectorHub.StoreFrame(values);
 
-                    myConectorHub.sendFeedback(feedbackString);
+                    myConectorHub.SendFeedback(feedbackString);
+
+                  
 
                 }
                 catch
@@ -149,7 +188,7 @@ namespace PTSimulation
         {
 
             isRunning = false;
-            myConectorHub.close();
+            myConectorHub.Close();
             
 
         }

@@ -18,6 +18,7 @@
             <RadioButton Name="rStayStill" GroupName="Feedback" Content="Stand Still"/>
             <RadioButton Name="rStopHmm" GroupName="Feedback" Content="Stop Hmmmm"/>
             <RadioButton Name="rSmile" GroupName="Feedback" Content="Smile"/>
+            <Label Name="feedbackLabel" Content="" HorizontalAlignment="Left" Height="34" Margin="128,0,0,0" Width="161"/>
         </StackPanel>
     </Grid>
 </Window>
